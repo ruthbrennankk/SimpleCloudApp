@@ -1,4 +1,3 @@
-var debug = 0
 const express = require("express")
 const path = require("path")
 const fetch = require("node-fetch")
@@ -18,16 +17,13 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 
 let publicPath = path.resolve(__dirname, "public")
 app.use(express.static(publicPath))
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname + "/index.html"))
-})
+app.get("/", function (req, res) {res.sendFile(path.join(__dirname + "/client.html"))})
 
 app.listen(port, function () {
-    console.log("Movie App is listening on " +port)
+    console.log("App is listening on port " +port)
 })
 
 app.post('/create', (req, res) => {
-    console.log("Creating")
     var params = {
         TableName: "Movies",
         KeySchema: [
@@ -45,9 +41,9 @@ app.post('/create', (req, res) => {
     };
     dynamodb.createTable(params, function (err, data) {
         if (err) {
-            console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
+            console.error("Error creating table :", JSON.stringify(err, null, 2));
         } else {
-            console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+            console.log("Created table successfully :", JSON.stringify(data, null, 2));
         }
     });
     var s3params = {
@@ -75,9 +71,9 @@ app.post('/create', (req, res) => {
 
                 docClient.put(params, function (err, data) {
                     if (err) {
-                        console.error("Unable to add movie", movie.title, ". Error JSON:", JSON.stringify(err, null, 2));
+                        console.error("Error adding movie to database :", movie.title, ". Error JSON:", JSON.stringify(err, null, 2));
                     } else {
-                        console.log("succeeded in adding movie:", movie.title);
+                        console.log("Added movie successfully :", movie.title);
                     }
                 });
             });
@@ -88,7 +84,6 @@ app.post('/create', (req, res) => {
 
 
 app.post('/query/:title/:year', (req, res) => {
-    console.log("Query time")
     var myArray = {
         myList :[]
     }
@@ -111,9 +106,8 @@ app.post('/query/:title/:year', (req, res) => {
 
     docClient.query(params, function(err, data) {
         if (err) {
-            console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
+            console.log("Error querying database:", JSON.stringify(err, null, 2));
         } else {
-            console.log("Query succeeded.");
             data.Items.forEach(function(item) {
                 console.log(item.year +' '+ item.title+'' + item.director+'' + item.rating);
                 var yearPush = item.year
@@ -133,7 +127,7 @@ app.post('/query/:title/:year', (req, res) => {
                     }
                 )
             });
-            console.log('Done Printing')
+            console.log("Query executed successfully.");
             res.json(myArray)
         }
     });
@@ -141,16 +135,14 @@ app.post('/query/:title/:year', (req, res) => {
 
 
 
-app.post('/destroy', (req, res) => {
-    console.log("Destroying");
-    var params = {
-        TableName : "Movies",
-    };
+app.post('/delete', (req, res) => {
+    console.log("Deleting Database");
+    var params = {TableName : "Movies"};
     dynamodb.deleteTable(params, function(err, data) {
         if (err) {
-            console.error("Unable to delete table. Error JSON:", JSON.stringify(err, null, 2));
+            console.error("Error deleting table :", JSON.stringify(err, null, 2));
         } else {
-            console.log("Deleted table. Table description JSON:", JSON.stringify(data, null, 2));
+            console.log("Deleted table successfully :", JSON.stringify(data, null, 2));
         }
     });
 });

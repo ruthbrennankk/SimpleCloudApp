@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 
 <head>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -11,20 +10,20 @@
     <button v-on:click="Create">Create</button><br>
     <button v-on:click="Query(year, title)">Query</button>
     Year: <input v-model="year"> Title: <input v-model="title"><br>
-    <button v-on:click="Destroy">Delete</button><br>
+    <button v-on:click="Delete">Delete</button><br>
     <table border="1">
         <thead>
         <tr>
             <th>Movie</th>
             <th>Year</th>
-            <th>Director</th>
+            <th>Director(s)</th>
             <th>Rating</th>
             <th>Rank</th>
             <th>Release Date</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="row in responseList">
+        <tr v-for="row in response">
             <td v-for="item in row">
                 {{item}}
             </td>
@@ -39,11 +38,11 @@
         data: {
             title:'',
             year:'',
-            responseList : [],
+            response : [],
         },
         methods: {
             Create: create,
-            Destroy: destroy,
+            Delete: deleteD,
             Query: query
         }
     })
@@ -51,23 +50,16 @@
     function create() {
         let prom = fetch('/create', {method:'POST'})
         prom.then(response => response.json())
-            .then(response => {
-            })
     }
 
     function query(year, title) {
         let prom = fetch('/query/'+title+'/'+year, {method:'POST'})
-        prom.then(response => response.json())
-            .then(response => {
-                this.responseList = response.myList
-            })
+        prom.then(response => response.json()).then(response => {this.response = response.myList})
     }
 
-    function destroy(){
-        let prom = fetch('/destroy', {method:'POST'})
+    function deleteD(){
+        let prom = fetch('/delete', {method:'POST'})
         prom.then(response => response.json())
-            .then(response => {
-            })
     }
 
 </script>
