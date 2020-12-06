@@ -1,20 +1,17 @@
 {
-  "name": "csu44000-assignment-2",
-  "version": "1.0.0",
-  "description": "A simple web application utilising Node.js, Vue.js, DynamoDB, AWS with a HTML client",
-  "main": "server.js",
+  "name": "Assignment 2 - A Simple Cloud App",
+  "version": "",
+  "description": "The objective of this assignment is to write a very simple client (employing Vue.js) interacting with a\nserver (implemented in Node.js) which in turn interacts with a Cloud-based Database (using AWS\nDynamoDB) and an Object stored in the Object-store (using AWS S3) ",
+  "main": "index.js",
   "scripts": {
+    "localrun" : "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/ruthbrennankk/SimpleCloudApp.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": ""
-  },
+  "author": "Ruth Brennan",
   "dependencies": {
     "aws-sdk": "^2.804.0",
     "express": "^4.17.1",
