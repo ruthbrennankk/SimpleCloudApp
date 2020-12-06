@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <h1> Assignment#2 – A Simple Cloud Application </h1>
+    <button v-on:click="Create">Create</button><br>
+    <button v-on:click="Query(year, title)">Query</button>
+    Year: <input v-model="year"> Title: <input v-model="title"><br>
+    <button v-on:click="Destroy">Delete</button><br>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Year</th>
+            <th>Director</th>
+            <th>Rating</th>
+            <th>Rank</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="row in responseList">
+            <td v-for="item in row">
+                {{item}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            title:'',
+            year:'',
+            responseList : [],
+        },
+        methods: {
+            Create: create,
+            Destroy: destroy,
+            Query: query
+        }
+    })
+
+    function create() {
+        let prom = fetch('/create', {method:'POST'})
+        prom.then(response => response.json())
+            .then(response => {
+            })
+    }
+
+    function query(year, title) {
+        let prom = fetch('/query/'+title+'/'+year, {method:'POST'})
+        prom.then(response => response.json())
+            .then(response => {
+                this.responseList = response.myList
+            })
+    }
+
+    function destroy(){
+        let prom = fetch('/destroy', {method:'POST'})
+        prom.then(response => response.json())
+            .then(response => {
+            })
+    }
+
+</script>
+</body>
+</html>
